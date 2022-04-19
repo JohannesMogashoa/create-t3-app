@@ -6,7 +6,7 @@
   "author": "Johannes Mogashoa <jomogashoa1993@gmail.com>",
   "license": "MIT",
   "bin": {
-    "create-t3-app": "./bin/create-t3-app.js"
+    "create-t3-app": "./create-t3-app.js"
   },
   "dependencies": {
     "commander": "^9.2.0"

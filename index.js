@@ -12,7 +12,7 @@ const {
   unlinkBaseFiles,
   checkOptions,
   noInstallation,
-} = require("./helpers");
+} = require("./bin/helpers");
 
 // Define Variables
 const log = console.log;
@@ -78,22 +78,24 @@ async function setup() {
 
     await runCmd("npx rimraf ./.git");
 
-    unlinkBaseFiles();
+    if (fs.readdirSync(appPath).length > 6) {
+      unlinkBaseFiles(appPath);
 
-    fs.cpSync(path.join(appPath, `bin/templates/${chosenTemplate}`), appPath);
-    fs.rmdirSync(path.join(appPath, "bin"), { recursive: true });
+      fs.cpSync(path.join(appPath, `bin/templates/${chosenTemplate}`), appPath);
+      fs.rmdirSync(path.join(appPath, "bin"), { recursive: true });
 
-    const answer = rl.question(
-      "\x1b[33m",
-      "Do you want to install dependencies? (y/n)"
-    );
+      const answer = rl.question(
+        "\x1b[33m",
+        "Do you want to install dependencies? (y/n)"
+      );
 
-    log();
+      log();
 
-    if (answer === "y") {
-      await installDependencies(folderName);
-    } else {
-      noInstallation();
+      if (answer === "y") {
+        await installDependencies(folderName);
+      } else {
+        noInstallation();
+      }
     }
   } catch (error) {
     log(error);

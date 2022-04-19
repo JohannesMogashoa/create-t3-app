@@ -43,8 +43,8 @@ async function installDependencies(folderName) {
   }
 }
 
-function noInstallation() {
-await runCmd("git init");
+async function noInstallation() {
+  await runCmd("git init");
   log("\x1b[34m", "You can start by typing:");
   log(`    cd ${folderName}`);
   log("    npm install", "\x1b[0m");
@@ -54,12 +54,13 @@ await runCmd("git init");
   log();
 }
 
-function unlinkBaseFiles() {
+function unlinkBaseFiles(appPath) {
   fs.unlinkSync(path.join(appPath, "README.md"));
   fs.unlinkSync(path.join(appPath, "package.json"));
-  fs.unlinkSync(path.join(appPath, "yarn.lock"));
+  fs.unlinkSync(path.join(appPath, "package-lock.json"));
   fs.unlinkSync(path.join(appPath, ".gitignore"));
   fs.unlinkSync(path.join(appPath, "LICENSE"));
+  fs.unlinkSync(path.join(appPath, "index.js"));
 }
 
 function checkOptions(options) {
