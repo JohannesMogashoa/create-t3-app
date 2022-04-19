@@ -2,11 +2,12 @@
   "name": "create-t3-app",
   "version": "1.0.0",
   "description": "CLI to create a new nextjs app using the T3 stack inspired by https://init.tips",
-  "main": "index.js",
   "repository": "https://github.com/JohannesMogashoa/create-t3-app.git",
   "author": "Johannes Mogashoa <jomogashoa1993@gmail.com>",
   "license": "MIT",
-  "bin": ".bin/index.js",
+  "bin": {
+    "create-t3-app": "./bin/create-t3-app.js"
+  },
   "dependencies": {
     "commander": "^9.2.0"
   }
