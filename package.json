@@ -6,9 +6,8 @@
   "repository": "https://github.com/JohannesMogashoa/create-t3-app.git",
   "author": "Johannes Mogashoa <jomogashoa1993@gmail.com>",
   "license": "MIT",
-  "bin": "./index.js",
+  "bin": ".bin/index.js",
   "dependencies": {
-    "chalk": "^5.0.1",
     "commander": "^9.2.0"
   }
 }
