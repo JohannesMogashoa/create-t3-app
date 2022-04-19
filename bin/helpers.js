@@ -1,26 +1,17 @@
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
+const { execSync } = require("child_process");
 const templates = require("./templates");
 
-async function runCmd(command) {
-  try {
-    log(`Running command: ${command}`);
-    const { stdout, stderr } = await exec(command);
-    log(stdout);
-    log(stderr);
-  } catch {
-    (error) => {
-      log("\x1b[31m", error, "\x1b[0m");
-    };
-  }
-}
+const log = console.log;
 
-async function installDependencies(folderName) {
+function installDependencies() {
   try {
+    log("\x1b[34m", "Initializing git", "\x1b[0m");
+    execSync("git init");
+
     log("\x1b[33m", "Installing dependencies...", "\x1b[0m");
-    await runCmd("npm install");
+    execSync("npm install");
 
     log(
       "\x1b[32m",
@@ -28,33 +19,28 @@ async function installDependencies(folderName) {
       "\x1b[0m"
     );
 
-    await runCmd("git init");
-
     log();
-
-    log("\x1b[34m", "You can start by typing:");
     log(`    cd ${folderName}`);
     log("    npm run dev", "\x1b[0m");
-    log();
-    log("Check Readme.md for more informations");
-    log();
+    log("\x1b[32m", "Happy Hacking Whoopie!!!!", "\x1b[0m");
   } catch (error) {
     log(error);
   }
 }
 
-async function noInstallation() {
-  await runCmd("git init");
-  log("\x1b[34m", "You can start by typing:");
+function noInstallation(folderName) {
+  log("\x1b[34m", "Initializing git", "\x1b[0m");
+  execSync("git init");
+  log();
+  log("\x1b[32m", "Project setup complete...!!!!!", "\x1b[0m");
   log(`    cd ${folderName}`);
-  log("    npm install", "\x1b[0m");
-  log("    npm run dev", "\x1b[0m");
+  log("    npm install && npm run dev", "\x1b[0m");
   log();
-  log("Check Readme.md for more informations");
-  log();
+  log("\x1b[32m", "Happy Hacking Whoopie!!!!", "\x1b[0m");
 }
 
 function unlinkBaseFiles(appPath) {
+  execSync("npx rimraf ./.git");
   fs.unlinkSync(path.join(appPath, "README.md"));
   fs.unlinkSync(path.join(appPath, "package.json"));
   fs.unlinkSync(path.join(appPath, "package-lock.json"));
@@ -92,7 +78,6 @@ function checkOptions(options) {
 }
 
 module.exports = {
-  runCmd,
   installDependencies,
   unlinkBaseFiles,
   checkOptions,

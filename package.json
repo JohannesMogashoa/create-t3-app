@@ -9,6 +9,7 @@
     "create-t3-app": "./create-t3-app.js"
   },
   "dependencies": {
-    "commander": "^9.2.0"
+    "commander": "^9.2.0",
+    "fs-extra": "^10.1.0"
   }
 }

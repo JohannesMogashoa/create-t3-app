@@ -2,13 +2,11 @@
 "use strict";
 
 // Import Dependencies
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
 const program = require("commander");
-const readline = require("readline");
+const { execSync } = require("child_process");
 const {
-  runCmd,
-  installDependencies,
   unlinkBaseFiles,
   checkOptions,
   noInstallation,
@@ -17,10 +15,6 @@ const {
 // Define Variables
 const log = console.log;
 let chosenTemplate = "basic";
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
 
 // Define Program Details
 program
@@ -70,33 +64,29 @@ chosenTemplate = checkOptions(program.opts());
 
 async function setup() {
   try {
-    log("\x1b[33m", "Downloading the project structure...", "\x1b[0m");
-    await runCmd(`git clone --depth 1 ${repo} ${folderName}`);
+    log("\x1b[33m", "Downloading the project files...", "\x1b[0m");
+
+    execSync(`git clone --depth 1 ${repo} ${folderName}`);
 
     process.chdir(appPath);
     log("\x1b[33m", "Setting Up project structure...", "\x1b[0m");
 
-    await runCmd("npx rimraf ./.git");
+    log("\x1b[34m", "Copying files...");
 
-    if (fs.readdirSync(appPath).length > 6) {
-      unlinkBaseFiles(appPath);
+    unlinkBaseFiles(appPath);
 
-      fs.cpSync(path.join(appPath, `bin/templates/${chosenTemplate}`), appPath);
-      fs.rmdirSync(path.join(appPath, "bin"), { recursive: true });
+    fs.copySync(
+      path.join(appPath, `/bin/templates/${chosenTemplate.name}/`),
+      appPath
+    );
 
-      const answer = rl.question(
-        "\x1b[33m",
-        "Do you want to install dependencies? (y/n)"
-      );
+    fs.removeSync(path.join(appPath, "bin"), { recursive: true });
 
-      log();
+    log();
 
-      if (answer === "y") {
-        await installDependencies(folderName);
-      } else {
-        noInstallation();
-      }
-    }
+    noInstallation(folderName);
+
+    process.exit();
   } catch (error) {
     log(error);
   }
